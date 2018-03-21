@@ -1,8 +1,8 @@
-import {baseUrl} from './env'
+import {shulanUrl} from './env'
 
 export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
     type = type.toUpperCase();
-    url = baseUrl + url;
+    url = shulanUrl + url;
 
     if (type == 'GET') {
         let dataStr = ''; //数据拼接字符串

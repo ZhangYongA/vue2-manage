@@ -1,4 +1,5 @@
 import fetch from '@/config/fetch'
+import fetchShulan from '@/config/fetchShulan'
 
 /**
  * 登陆
@@ -73,7 +74,7 @@ export const adminCount = () => fetch('/admin/count');
  */
 
 export const cityGuess = () => fetch('/v1/cities', {
-	type: 'guess'
+    type: 'guess'
 });
 
 /**
@@ -87,9 +88,9 @@ export const addShop = data => fetch('/shopping/addShop', data, 'POST');
  */
 
 export const searchplace = (cityid, value) => fetch('/v1/pois', {
-	type: 'search',
-	city_id: cityid,
-	keyword: value
+    type: 'search',
+    city_id: cityid,
+    keyword: value
 });
 
 /**
@@ -226,3 +227,13 @@ export const getAddressById = address_id => fetch('/v1/addresse/' + address_id);
  */
 
 export const getUserCity = () => fetch('/v1/user/city/count');
+
+export const listIdCardAudit = (pageNum, pageSize) => fetchShulan('/user/public/id_card/list', {
+    pageNum: pageNum,
+    pageSize: pageSize
+});
+
+//
+// export const cityGuess = () => fetch('/v1/cities', {
+//     type: 'guess'
+// });
