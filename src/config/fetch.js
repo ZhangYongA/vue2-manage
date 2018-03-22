@@ -1,10 +1,13 @@
-import {baseUrl} from './env'
+import {baseUrl, shulanUrl} from './env'
 
-export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
+export default async (url = '', data = {}, shulan = false, type = 'GET', method = 'fetch') => {
     type = type.toUpperCase();
-    url = baseUrl + url;
-
-    if (type == 'GET') {
+    if (shulan) {
+        url = shulanUrl + url
+    } else {
+        url = baseUrl + url
+    }
+    if (type === 'GET') {
         let dataStr = ''; //数据拼接字符串
         Object.keys(data).forEach(key => {
             dataStr += key + '=' + data[key] + '&';
@@ -16,7 +19,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
         }
     }
 
-    if (window.fetch && method == 'fetch') {
+    if (window.fetch && method === 'fetch') {
         let requestConfig = {
             credentials: 'include',
             method: type,
@@ -25,10 +28,10 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
                 'Content-Type': 'application/json'
             },
             mode: "cors",
-            cache: "force-cache"
+            cache: 'no-store'
         }
 
-        if (type == 'POST') {
+        if (type === 'POST') {
             Object.defineProperty(requestConfig, 'body', {
                 value: JSON.stringify(data)
             })
@@ -36,8 +39,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
 
         try {
             const response = await fetch(url, requestConfig);
-            const responseJson = await response.json();
-            return responseJson
+            return await response.json()
         } catch (error) {
             throw new Error(error)
         }
@@ -51,7 +53,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
             }
 
             let sendData = '';
-            if (type == 'POST') {
+            if (type === 'POST') {
                 sendData = JSON.stringify(data);
             }
 
@@ -60,8 +62,8 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
             requestObj.send(sendData);
 
             requestObj.onreadystatechange = () => {
-                if (requestObj.readyState == 4) {
-                    if (requestObj.status == 200) {
+                if (requestObj.readyState === 4) {
+                    if (requestObj.status === 200) {
                         let obj = requestObj.response
                         if (typeof obj !== 'object') {
                             obj = JSON.parse(obj);

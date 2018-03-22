@@ -1,5 +1,4 @@
 import fetch from '@/config/fetch'
-import fetchShulan from '@/config/fetchShulan'
 
 /**
  * 登陆
@@ -228,10 +227,10 @@ export const getAddressById = address_id => fetch('/v1/addresse/' + address_id);
 
 export const getUserCity = () => fetch('/v1/user/city/count');
 
-export const listIdCardAudit = (pageNum, pageSize) => fetchShulan('/user/public/id_card/list', {
+export const listIdCardAudit = (pageNum, pageSize) => fetch('/user/public/id_card/list', {
     pageNum: pageNum,
     pageSize: pageSize
-});
+}, true);
 
 //
 // export const cityGuess = () => fetch('/v1/cities', {

@@ -7,22 +7,36 @@
                 highlight-current-row
                 style="width: 100%">
                 <el-table-column
-                    type="index"
-                    width="100">
+                    type="index">
                 </el-table-column>
                 <el-table-column
-                    property="registe_time"
-                    label="注册日期"
+                    property="userId"
+                    label="用户 id">
+                </el-table-column>
+                <el-table-column
+                    property="status"
+                    label="审核状态"
                     width="220">
                 </el-table-column>
                 <el-table-column
-                    property="username"
-                    label="用户姓名"
-                    width="220">
+                    property="cardNo"
+                    label="身份证号">
                 </el-table-column>
                 <el-table-column
-                    property="city"
-                    label="注册地址">
+                    property="positivePicUrl"
+                    label="正面照片">
+                </el-table-column>
+                <el-table-column
+                    property="backPicUrl"
+                    label="反面照片">
+                </el-table-column>
+                <el-table-column
+                    property="commitTime"
+                    label="提交时间">
+                </el-table-column>
+                <el-table-column
+                    property="auditTime"
+                    label="审核时间">
                 </el-table-column>
             </el-table>
             <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -30,7 +44,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
-                    :page-size="20"
+                    :page-size="pageSize"
                     layout="total, prev, pager, next"
                     :total="count">
                 </el-pagination>
@@ -46,26 +60,10 @@
     export default {
         data() {
             return {
-                tableData: [{
-                    registe_time: '2016-05-02',
-                    username: '王小虎',
-                    city: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    registe_time: '2016-05-04',
-                    username: '王小虎',
-                    city: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    registe_time: '2016-05-01',
-                    username: '王小虎',
-                    city: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    registe_time: '2016-05-03',
-                    username: '王小虎',
-                    city: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 currentRow: null,
-                pageNum: 0,
-                pageSize: 20,
+                pageNum: 20,
+                pageSize: 1,
                 count: 0,
                 currentPage: 1,
             }
@@ -93,14 +91,9 @@
                 this.getUsers()
             },
             async getUsers() {
-                this.tableData = await listIdCardAudit(1, 20);
-                // Users.forEach(item => {
-                //     const tableData = {};
-                //     tableData.username = item.username;
-                //     tableData.registe_time = item.registe_time;
-                //     tableData.city = item.city;
-                //     this.tableData.push(tableData);
-                // })
+                const auditList = await listIdCardAudit(this.currentPage, this.pageSize);
+                this.tableData = auditList.data.list
+                this.count = auditList.data.total
             }
         },
     }
