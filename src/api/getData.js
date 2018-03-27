@@ -224,15 +224,11 @@ export const getAddressById = address_id => fetch('/v1/addresse/' + address_id);
 /**
  * 获取用户分布信息
  */
-
 export const getUserCity = () => fetch('/v1/user/city/count');
 
 export const listIdCardAudit = (pageNum, pageSize) => fetch('/user/public/id_card/list', {
     pageNum: pageNum,
     pageSize: pageSize
-}, true);
+}, 'GET', 'fetch', true);
 
-//
-// export const cityGuess = () => fetch('/v1/cities', {
-//     type: 'guess'
-// });
+export const cities = () => fetch('/static/pca.json');

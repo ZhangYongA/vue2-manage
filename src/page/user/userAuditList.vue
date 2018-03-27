@@ -23,12 +23,16 @@
                     label="身份证号">
                 </el-table-column>
                 <el-table-column
-                    property="positivePicUrl"
-                    label="正面照片">
+                    label="手持身份证照">
+                    <template>
+                        <el-button
+                            size="small">点击查看
+                        </el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                    property="backPicUrl"
-                    label="反面照片">
+                    property="picUrl"
+                    label="正面身份证照">
                 </el-table-column>
                 <el-table-column
                     property="commitTime"
@@ -54,7 +58,7 @@
 </template>
 
 <script>
-    import headTop from '../components/headTop'
+    import headTop from '../../components/headTop'
     import {listIdCardAudit} from '@/api/getData'
 
     export default {
@@ -94,13 +98,16 @@
                 const auditList = await listIdCardAudit(this.currentPage, this.pageSize);
                 this.tableData = auditList.data.list
                 this.count = auditList.data.total
+            },
+            lookHandheld() {
+
             }
         },
     }
 </script>
 
 <style lang="less">
-    @import '../style/mixin';
+    @import '../../style/mixin';
 
     .table_container {
         padding: 20px;

@@ -9,6 +9,11 @@
                         <el-menu-item index="users">列表</el-menu-item>
                         <el-menu-item index="userAuditList">实名认证审核</el-menu-item>
                     </el-submenu>
+                    <el-submenu index="8">
+                        <template slot="title"><i class="el-icon-document"></i>活动管理</template>
+                        <el-menu-item index="liveList">活动列表</el-menu-item>
+                        <el-menu-item index="addLive">新增活动</el-menu-item>
+                    </el-submenu>
                     <el-submenu index="2">
                         <template slot="title"><i class="el-icon-document"></i>数据管理</template>
                         <el-menu-item index="userList">用户列表</el-menu-item>

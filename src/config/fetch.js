@@ -1,6 +1,6 @@
 import {baseUrl, shulanUrl} from './env'
 
-export default async (url = '', data = {}, shulan = false, type = 'GET', method = 'fetch') => {
+export default async (url = '', data = {}, type = 'GET', method = 'fetch', shulan) => {
     type = type.toUpperCase();
     if (shulan) {
         url = shulanUrl + url

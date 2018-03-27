@@ -14,7 +14,7 @@ let shulanUrl = '';
 if (process.env.NODE_ENV == 'development') {
     baseUrl = 'http://localhost:8002';
     baseImgPath = 'http://localhost:8002/img/';
-    shulanUrl = "http://localhost:10010";
+    shulanUrl = "http://localhost:8080";
 } else {
     baseUrl = 'http://cangdu.org:8001';
     baseImgPath = 'http://cangdu.org:8001/img/';

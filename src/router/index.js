@@ -20,7 +20,9 @@ const vueEdit = r => require.ensure([], () => r(require('@/page/vueEdit')), 'vue
 const adminSet = r => require.ensure([], () => r(require('@/page/adminSet')), 'adminSet');
 const sendMessage = r => require.ensure([], () => r(require('@/page/sendMessage')), 'sendMessage');
 const explain = r => require.ensure([], () => r(require('@/page/explain')), 'explain');
-const userAuditList = r => require.ensure([], () => r(require('@/page/userAuditList')), 'userAuditList');
+const userAuditList = r => require.ensure([], () => r(require('@/page/user/userAuditList')), 'userAuditList');
+const addLive = r => require.ensure([], () => r(require('@/page/live/add')), 'addLive');
+const liveList = r => require.ensure([], () => r(require('@/page/live/list')), 'liveList');
 
 
 const routes = [
@@ -96,6 +98,14 @@ const routes = [
             path: '/userAuditList',
             component: userAuditList,
             meta: ['用户管理', '实名认证审核'],
+        }, {
+            path: '/addLive',
+            component: addLive,
+            meta: ['活动管理', '新增活动']
+        }, {
+            path: '/liveList',
+            component: liveList,
+            meta: ['活动管理', '活动列表']
         }]
     }
 ]
