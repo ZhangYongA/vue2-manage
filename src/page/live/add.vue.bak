@@ -2,9 +2,9 @@
     <div>
         <head-top></head-top>
         <el-row style="margin-top: 20px;">
-            <el-col :span="18" :offset="2">
+            <el-col :span="12" :offset="4">
                 <el-form :model="formData" :rules="rules" ref="formData" label-width="110px" class="demo-formData">
-                    <el-form-item label="活动标题" prop="themeName" style="width: 70%">
+                    <el-form-item label="活动标题" prop="themeName">
                         <el-input v-model="formData.themeName"></el-input>
                     </el-form-item>
                     <el-form-item label="活动地区" prop="address">
@@ -329,13 +329,5 @@
 
     .el-table .positive-row {
         background: #e2f0e4;
-    }
-
-    .edit_container{
-        padding: 40px;
-        margin-bottom: 40px;
-    }
-    .editer{
-        height: 350px;
     }
 </style>
