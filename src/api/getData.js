@@ -230,5 +230,3 @@ export const listIdCardAudit = (pageNum, pageSize) => fetch('/user/public/id_car
     pageNum: pageNum,
     pageSize: pageSize
 }, 'GET', 'fetch', true);
-
-export const cities = () => fetch('/static/pca.json');

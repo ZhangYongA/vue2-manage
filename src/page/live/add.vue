@@ -4,21 +4,22 @@
         <el-row style="margin-top: 20px;">
             <el-col :span="18" :offset="2">
                 <el-form :model="formData" :rules="rules" ref="formData" label-width="110px" class="demo-formData">
-                    <el-form-item label="活动标题" prop="themeName" style="width: 70%">
+                    <el-form-item label="活动标题" prop="themeName" class="normal_item">
                         <el-input v-model="formData.themeName"></el-input>
                     </el-form-item>
-                    <el-form-item label="活动地区" prop="address">
-                        <el-cascader
-                            size="large"
-                            :options="options"
-                            v-model="selectedOptions"
-                            @change="handleChange">
+                    <el-form-item label="活动地区" prop="liveAddress" class="form_item">
+                        <el-cascader name="liveAddress"
+                                     size="large"
+                                     :options="options"
+                                     v-model="formData.liveAddress"
+                                     @change="handleChange">
                         </el-cascader>
                     </el-form-item>
-                    <el-form-item label="活动人数" prop="userTotalCount">
-                        <el-input v-model.number="formData.userTotalCount" maxLength="11"></el-input>
+                    <el-form-item label="活动人数" prop="userTotalCount" class="normal_item">
+                        <el-input-number v-model.number="formData.userTotalCount" :min="0" :max="100"
+                                         :step="2"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="活动时间" prop="liveStartTime">
+                    <el-form-item label="活动时间" prop="liveTime">
                         <el-date-picker
                             v-model="formData.liveStartTime"
                             type="datetime"
@@ -30,21 +31,20 @@
                             placeholder="结束时间">
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="原价" prop="originPrice">
-                        <el-input v-model="formData.originPrice"></el-input>
+                    <el-form-item label="原价" prop="originPrice" class="normal_item">
+                        <el-input-number v-model="formData.originPrice" :min="0" :max="100"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="优惠价" prop="discountPrice">
-                        <el-input v-model="formData.discountPrice"></el-input>
+                    <el-form-item label="优惠价" prop="discountPrice" class="normal_item">
+                        <el-input-number v-model="formData.discountPrice" :min="0" :max="100"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="活动标签" prop="tag">
+                    <el-form-item label="活动标签" prop="tag" class="normal_item">
                         <el-input v-model="formData.tag"></el-input>
                     </el-form-item>
-                    <el-form-item label="活动说明" prop="desc">
-                        <quill-editor v-model="content"
+                    <el-form-item label="活动说明" prop="desc" class="desc_item">
+                        <quill-editor v-model="formData.desc"
                                       ref="myQuillEditor"
                                       class="editer"
-                                      :options="editorOption"
-                                      @ready="onEditorReady($event)">
+                                      :options="editorOption">
                         </quill-editor>
                     </el-form-item>
                     <el-form-item class="button_submit">
@@ -58,7 +58,7 @@
 
 <script>
     import headTop from '@/components/headTop'
-    import {addShop, cities, cityGuess, foodCategory, searchplace} from '@/api/getData'
+    import {addShop, cityGuess, foodCategory, searchplace} from '@/api/getData'
     import {CodeToText, regionData} from 'element-china-area-data'
     import {quillEditor} from 'vue-quill-editor'
 
@@ -69,27 +69,62 @@
                 provinces: [],
                 cities: [],
                 areas: [],
-                selectedOptions: [],
+                liveAddress: [],
                 options: regionData,
+                formRule: {
+                    validateLiveAddress: ''
+                },
                 formData: {
                     themeName: '',
                     province: '',
                     city: '',
                     area: '',
-                    userTotalCount: '',
+                    userTotalCount: 10,
                     liveStartTime: '',
                     liveEndTime: '',
-                    originPrice: '',
-                    discountPrice: '',
+                    originPrice: 0,
+                    discountPrice: 0,
                     tag: '',
-                    desc: ''
-
+                    desc: '',
+                    liveAddress: []
                 },
                 rules: {
                     themeName: [
-                        {required: true, message: '请输入活动标题', trigger: 'blur'}
+                        {required: true, message: '请输入活动标题', trigger: 'blur'},
+                    ],
+                    // liveAddress: [
+                    //     {validator: validateLiveAddress, trigger: 'blur'}
+                    // ],
+                    userTotalCount: [
+                        {required: true, message: '请输入活动总人数'},
+                        {type: 'number', message: '活动总人数必须为数字', trigger: 'blur'}
+                    ],
+                    liveStartTime: [
+                        {required: true, message: '请选择活动开始时间', trigger: 'blur'}
+                    ],
+                    liveEndtTime: [
+                        {required: true, message: '请选择活动结束时间', trigger: 'blur'}
+                    ],
+                    originPrice: [
+                        {required: true, message: '请输入活动原价'},
+                        {type: 'number', message: '活动原件必须为数字', trigger: 'blur'}
+                    ],
+                    discountPrice: [
+                        {required: true, message: '请输入优惠价'},
+                        {type: 'number', message: '优惠价必须为数字', trigger: 'blur'}
+                    ],
+                    liveAddress: [
+                        {required: true, message: '请选择活动地址'}
+                    ],
+                    // tag: [
+                    //     {required: true, message: '请输入活动总人数'},
+                    //     {type: 'number', message: '活动总人数必须为数字', trigger: 'blur'}
+                    // ],
+                    desc: [
+                        {required: true, message: '请输入活动说明'},
                     ]
                 },
+                editorOption: {}
             }
         },
         components: {
@@ -106,119 +141,10 @@
         },
         methods: {
             async initData() {
-                try {
-                    this.areaJson = await cities();
-                    for (var area in this.areaJson) {
-                        this.provinces.push({"value": area})
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-            },
-            async querySearchAsync(province, cb) {
-                var p = this.provinces;
-                var result = province ? p.filter(this.createFilter(province)) : p;
-                // // 调用 callback 返回建议列表的数据
-                cb(result);
-            },
-            createFilter(province) {
-                return (restaurant) => {
-                    return (restaurant.value.toLowerCase().indexOf(province.toLowerCase()) === 0);
-                };
-            },
-            addressSelect(address) {
-                this.formData.latitude = address.latitude;
-                this.formData.longitude = address.longitude;
-                console.log(this.formData.latitude, this.formData.longitude)
-            },
-            handleShopAvatarScucess(res, file) {
-                if (res.status == 1) {
-                    this.formData.image_path = res.image_path;
-                } else {
-                    this.$message.error('上传图片失败！');
-                }
-            },
-            handleBusinessAvatarScucess(res, file) {
-                if (res.status == 1) {
-                    this.formData.business_license_image = res.image_path;
-                } else {
-                    this.$message.error('上传图片失败！');
-                }
-            },
-            handleServiceAvatarScucess(res, file) {
-                if (res.status == 1) {
-                    this.formData.catering_service_license_image = res.image_path;
-                } else {
-                    this.$message.error('上传图片失败！');
-                }
-            },
-            beforeAvatarUpload(file) {
-                const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
-                const isLt2M = file.size / 1024 / 1024 < 2;
 
-                if (!isRightType) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                return isRightType && isLt2M;
-            },
-            selectActivity() {
-                this.$prompt('请输入活动详情', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                }).then(({value}) => {
-                    if (value == null) {
-                        this.$message({
-                            type: 'info',
-                            message: '请输入活动详情'
-                        });
-                        return
-                    }
-                    let newObj = {};
-                    switch (this.activityValue) {
-                        case '满减优惠':
-                            newObj = {
-                                icon_name: '减',
-                                name: '满减优惠',
-                                description: value,
-                            }
-                            break;
-                        case '优惠大酬宾':
-                            newObj = {
-                                icon_name: '特',
-                                name: '优惠大酬宾',
-                                description: value,
-                            }
-                            break;
-                        case '新用户立减':
-                            newObj = {
-                                icon_name: '新',
-                                name: '新用户立减',
-                                description: value,
-                            }
-                            break;
-                        case '进店领券':
-                            newObj = {
-                                icon_name: '领',
-                                name: '进店领券',
-                                description: value,
-                            }
-                            break;
-                    }
-                    this.activities.push(newObj);
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });
-                });
-            },
-            handleDelete(index) {
-                this.activities.splice(index, 1)
             },
             submitForm(formName) {
+                console.log(this.liveAddress)
                 this.$refs[formName].validate(async (valid) => {
                     if (valid) {
                         Object.assign(this.formData, {activities: this.activities}, {
@@ -331,11 +257,20 @@
         background: #e2f0e4;
     }
 
-    .edit_container{
+    .edit_container {
         padding: 40px;
         margin-bottom: 40px;
     }
-    .editer{
+
+    .editer {
         height: 350px;
+    }
+
+    .normal_item {
+        width: 70%;
+    }
+
+    .desc_item {
+        height: 450px;
     }
 </style>
